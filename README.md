@@ -1,274 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stopwatch</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            transition: background-color 0.3s, color 0.3s;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Stopwatch</title>
 
-        body.dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
 
-        .stopwatch {
-            background-color: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 350px;
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f172a,#1e293b,#334155);
+    transition:0.4s ease;
+}
 
-        body.dark-mode .stopwatch {
-            background-color: #1e1e1e;
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
-        }
+.container{
+    width:400px;
+    padding:30px;
+    border-radius:25px;
+    backdrop-filter:blur(15px);
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 8px 32px rgba(0,0,0,0.3);
+    text-align:center;
+    color:white;
+    transition:0.4s ease;
+}
 
-        .display {
-            font-size: 3em;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            color: #333;
-            transition: color 0.3s;
-        }
+h1{
+    margin-bottom:20px;
+    font-size:2rem;
+}
 
-        body.dark-mode .display {
-            color: #ffffff;
-        }
+.time{
+    font-size:3rem;
+    font-weight:bold;
+    margin:20px 0;
+    letter-spacing:2px;
+}
 
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:20px;
+}
 
-        .controls button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-        }
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:600;
+    transition:0.3s;
+}
 
-        .controls button:hover {
-            transform: scale(1.05);
-        }
+button:hover{
+    transform:translateY(-3px);
+}
 
-        #startPause {
-            background-color: #4CAF50;
-            color: white;
-        }
+.start{
+    background:#22c55e;
+    color:white;
+}
 
-        #startPause.running {
-            background-color: #ff9800;
-        }
+.pause{
+    background:#f59e0b;
+    color:white;
+}
 
-        #reset {
-            background-color: #f44336;
-            color: white;
-        }
+.reset{
+    background:#ef4444;
+    color:white;
+}
 
-        #lap {
-            background-color: #2196F3;
-            color: white;
-        }
+.lap{
+    background:#3b82f6;
+    color:white;
+}
 
-        .laps {
-            margin-top: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            transition: background-color 0.3s;
-        }
+.theme{
+    background:#8b5cf6;
+    color:white;
+}
 
-        body.dark-mode .laps {
-            background-color: #2c2c2c;
-        }
+.laps{
+    margin-top:25px;
+    text-align:left;
+    max-height:220px;
+    overflow-y:auto;
+}
 
-        .lap-time {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            font-size: 0.9em;
-            color: #555;
-            transition: color 0.3s;
-        }
+.laps h3{
+    margin-bottom:10px;
+}
 
-        body.dark-mode .lap-time {
-            color: #ccc;
-        }
+.lap-item{
+    background:rgba(255,255,255,0.08);
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:8px;
+}
 
-        .lap-time:last-child {
-            border-bottom: none;
-        }
+/* LIGHT MODE */
 
-        .dark-mode-toggle {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background-color 0.3s;
-        }
+body.light{
+    background:linear-gradient(135deg,#e2e8f0,#f8fafc,#ffffff);
+}
 
-        body.dark-mode .dark-mode-toggle {
-            background-color: #555;
-        }
-    </style>
+body.light .container{
+    background:rgba(255,255,255,0.85);
+    color:#111827;
+    border:1px solid rgba(0,0,0,0.1);
+}
+
+body.light .lap-item{
+    background:rgba(0,0,0,0.05);
+}
+
+body.light h1,
+body.light .time,
+body.light .laps h3{
+    color:#111827;
+}
+
+::-webkit-scrollbar{
+    width:5px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#64748b;
+    border-radius:10px;
+}
+
+@media(max-width:450px){
+
+.container{
+    width:95%;
+}
+
+.time{
+    font-size:2rem;
+}
+
+button{
+    width:100%;
+}
+
+}
+</style>
 </head>
+
 <body>
-    <div class="stopwatch">
-        <div class="display" id="display">00:00.00</div>
-        <div class="controls">
-            <button id="startPause">Start</button>
-            <button id="lap">Lap</button>
-            <button id="reset">Reset</button>
-        </div>
-        <div class="laps" id="laps"></div>
+
+<div class="container">
+
+    <h1>⏱ Stopwatch</h1>
+
+    <div class="time" id="display">
+        00:00:00:000
     </div>
-    <button class="dark-mode-toggle" id="darkModeToggle">Dark Mode</button>
 
-    <script>
-        class Stopwatch {
-            constructor(displayElement, lapsContainer) {
-                this.display = displayElement;
-                this.laps = lapsContainer;
-                this.running = false;
-                this.startTime = null;
-                this.elapsedTime = 0;
-                this.timer = null;
-                this.lapTimes = [];
+    <div class="buttons">
 
-                this.startPauseBtn = document.getElementById('startPause');
-                this.lapBtn = document.getElementById('lap');
-                this.resetBtn = document.getElementById('reset');
+        <button class="start" onclick="startStopwatch()">
+            ▶ Start
+        </button>
 
-                this.bindEvents();
-            }
+        <button class="pause" onclick="pauseStopwatch()">
+            ⏸ Pause
+        </button>
 
-            bindEvents() {
-                this.startPauseBtn.addEventListener('click', () => this.toggle());
-                this.lapBtn.addEventListener('click', () => this.recordLap());
-                this.resetBtn.addEventListener('click', () => this.reset());
-            }
+        <button class="lap" onclick="recordLap()">
+            🏁 Lap
+        </button>
 
-            toggle() {
-                if (this.running) {
-                    this.pause();
-                } else {
-                    this.start();
-                }
-            }
+        <button class="reset" onclick="resetStopwatch()">
+            🔄 Reset
+        </button>
 
-            start() {
-                if (!this.running) {
-                    this.running = true;
-                    this.startTime = Date.now() - this.elapsedTime;
-                    this.timer = setInterval(() => this.update(), 10);
-                    this.startPauseBtn.textContent = 'Pause';
-                    this.startPauseBtn.classList.add('running');
-                }
-            }
+        <button class="theme" onclick="toggleTheme()">
+            🌙 Light
+        </button>
 
-            pause() {
-                if (this.running) {
-                    this.running = false;
-                    clearInterval(this.timer);
-                    this.elapsedTime = Date.now() - this.startTime;
-                    this.startPauseBtn.textContent = 'Start';
-                    this.startPauseBtn.classList.remove('running');
-                }
-            }
+    </div>
 
-            reset() {
-                this.running = false;
-                clearInterval(this.timer);
-                this.elapsedTime = 0;
-                this.startTime = null;
-                this.lapTimes = [];
-                this.updateDisplay();
-                this.clearLaps();
-                this.startPauseBtn.textContent = 'Start';
-                this.startPauseBtn.classList.remove('running');
-            }
+    <div class="laps">
+        <h3>Lap Records</h3>
+        <div id="lapContainer"></div>
+    </div>
 
-            recordLap() {
-                if (this.running) {
-                    const currentTime = Date.now() - this.startTime;
-                    this.lapTimes.push(currentTime);
-                    this.updateLaps();
-                }
-            }
+</div>
 
-            update() {
-                this.elapsedTime = Date.now() - this.startTime;
-                this.updateDisplay();
-            }
+<script>
 
-            updateDisplay() {
-                const time = this.formatTime(this.elapsedTime);
-                this.display.textContent = time;
-            }
+let startTime;
+let elapsedTime = 0;
+let timerInterval;
+let running = false;
+let lapCount = 1;
 
-            updateLaps() {
-                this.laps.innerHTML = '';
-                this.lapTimes.forEach((time, index) => {
-                    const lapElement = document.createElement('div');
-                    lapElement.className = 'lap-time';
-                    lapElement.textContent = `Lap ${index + 1}: ${this.formatTime(time)}`;
-                    this.laps.appendChild(lapElement);
-                });
-            }
+function formatTime(ms){
 
-            clearLaps() {
-                this.laps.innerHTML = '';
-            }
+    let milliseconds = ms % 1000;
+    let seconds = Math.floor(ms / 1000) % 60;
+    let minutes = Math.floor(ms / (1000 * 60)) % 60;
+    let hours = Math.floor(ms / (1000 * 60 * 60));
 
-            formatTime(milliseconds) {
-                const totalSeconds = Math.floor(milliseconds / 1000);
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = totalSeconds % 60;
-                const cents = Math.floor((milliseconds % 1000) / 10);
-                
-                return `${this.pad(minutes)}:${this.pad(seconds)}.${this.pad(cents)}`;
-            }
+    return (
+        String(hours).padStart(2,'0') + ":" +
+        String(minutes).padStart(2,'0') + ":" +
+        String(seconds).padStart(2,'0') + ":" +
+        String(milliseconds).padStart(3,'0')
+    );
+}
 
-            pad(number) {
-                return number.toString().padStart(2, '0');
-            }
-        }
+function updateDisplay(){
 
-        // Initialize the stopwatch
-        const display = document.getElementById('display');
-        const laps = document.getElementById('laps');
-        const stopwatch = new Stopwatch(display, laps);
+    document.getElementById("display").textContent =
+    formatTime(Date.now() - startTime + elapsedTime);
 
-        // Dark mode toggle
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
-        });
-    </script>
+}
+
+function startStopwatch(){
+
+    if(!running){
+
+        startTime = Date.now();
+
+        timerInterval =
+        setInterval(updateDisplay,10);
+
+        running = true;
+    }
+}
+
+function pauseStopwatch(){
+
+    if(running){
+
+        clearInterval(timerInterval);
+
+        elapsedTime +=
+        Date.now() - startTime;
+
+        running = false;
+    }
+}
+
+function resetStopwatch(){
+
+    clearInterval(timerInterval);
+
+    running = false;
+    elapsedTime = 0;
+    lapCount = 1;
+
+    document.getElementById("display")
+    .textContent = "00:00:00:000";
+
+    document.getElementById("lapContainer")
+    .innerHTML = "";
+}
+
+function recordLap(){
+
+    if(!running) return;
+
+    const currentTime =
+    formatTime(Date.now() - startTime + elapsedTime);
+
+    const lap =
+    document.createElement("div");
+
+    lap.classList.add("lap-item");
+
+    lap.innerHTML =
+    `<strong>Lap ${lapCount}</strong> — ${currentTime}`;
+
+    document.getElementById("lapContainer")
+    .prepend(lap);
+
+    lapCount++;
+}
+
+/* THEME TOGGLE */
+
+function toggleTheme(){
+
+    document.body.classList.toggle("light");
+
+    const isLight =
+    document.body.classList.contains("light");
+
+    localStorage.setItem(
+        "theme",
+        isLight ? "light" : "dark"
+    );
+
+    document.querySelector(".theme").innerHTML =
+    isLight ? "☀ Dark" : "🌙 Light";
+}
+
+/* LOAD SAVED THEME */
+
+window.onload = () => {
+
+    const savedTheme =
+    localStorage.getItem("theme");
+
+    if(savedTheme === "light"){
+
+        document.body.classList.add("light");
+
+        document.querySelector(".theme").innerHTML =
+        "☀ Dark";
+    }
+};
+
+</script>
+
 </body>
 </html>
